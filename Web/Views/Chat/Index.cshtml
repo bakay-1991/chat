@@ -95,7 +95,7 @@
 
         $('.inbox_chat').scroll(receiverScrollHandler);
 
-        $('.chat_list').click(function () {
+        $(document).on('click', '.chat_list', function () {
             if (!$(this).hasClass('active_chat')) {
                 $('.active_chat').removeClass('active_chat');
                 $(this).addClass('active_chat');
