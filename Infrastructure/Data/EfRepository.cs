@@ -24,9 +24,9 @@ namespace Infrastructure.Data
 			return await _dbContext.Set<T>().FindAsync(id);
 		}
 
-		public virtual async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
+		public virtual async Task<T> FirstOrDefaultAsync(ISpecification<T> spec)
 		{
-			return await _dbContext.Set<T>().FirstOrDefaultAsync(predicate);
+			return await ApplySpecification(spec).FirstOrDefaultAsync();
 		}
 
 		public async Task<IReadOnlyList<T>> ListAllAsync()

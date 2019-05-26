@@ -5,9 +5,9 @@ using ApplicationCore.Specifications;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
+using Web.Services;
+using Web.ViewModels;
 
 namespace Web.Hubs
 {
@@ -33,13 +33,14 @@ namespace Web.Hubs
 				Group group = await _groupRepository.GetByIdAsync(receiverId);
 				if (group != null)
 				{
-					await _messageService.CreateMessageAsync(userId, receiverId, message);
-					await Clients.Group(group.Id.ToString()).SendAsync("Receive", receiverId, message);
+					Message msg = await _messageService.CreateMessageAsync(userId, message, null, group.Id);
+					await Clients.Group(group.Id.ToString()).SendAsync("Receive", MessageViewModelService.ConvertTo(msg, userId, receiverId));
 				}
 				else
 				{
-					await _messageService.CreateMessageAsync(userId, receiverId, message);
-					await Clients.User(receiverId.ToString()).SendAsync("Receive", receiverId, message);
+					Message msg = await _messageService.CreateMessageAsync(userId, message, receiverId, null);
+					await Clients.User(userId.ToString()).SendAsync("Receive", MessageViewModelService.ConvertTo(msg, userId, receiverId));
+					await Clients.User(receiverId.ToString()).SendAsync("Receive", MessageViewModelService.ConvertTo(msg, receiverId, userId));
 				}
 			}
 		}
@@ -48,8 +49,8 @@ namespace Web.Hubs
 		{
 			if (Guid.TryParse(Context.UserIdentifier, out Guid userId))
 			{
-				BaseSpecification<GroupUser> spec = new BaseSpecification<GroupUser>(x => x.UserId == userId);
-				//spec.AddInclude(x => x.Group);
+				BaseSpecification<GroupUser> spec = new BaseSpecification<GroupUser>();
+				spec.AddCriteria(x => x.UserId == userId);
 				IReadOnlyList<GroupUser> groupUsers = await _groupUserRepository.ListAsync(spec);
 				foreach (GroupUser groupUser in groupUsers)
 				{
@@ -63,8 +64,8 @@ namespace Web.Hubs
 		{
 			if (Guid.TryParse(Context.UserIdentifier, out Guid userId))
 			{
-				BaseSpecification<GroupUser> spec = new BaseSpecification<GroupUser>(x => x.UserId == userId);
-				//spec.AddInclude(x => x.Group);
+				BaseSpecification<GroupUser> spec = new BaseSpecification<GroupUser>();
+				spec.AddCriteria(x => x.UserId == userId);
 				IReadOnlyList<GroupUser> groupUsers = await _groupUserRepository.ListAsync(spec);
 				foreach (GroupUser groupUser in groupUsers)
 				{

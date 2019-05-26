@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Web.ViewModels.ChatViewModel
+@{
     ViewData["Title"] = "Chat Page";
 }
 
@@ -22,111 +23,53 @@
                     </div>
                 </div>
                 <div class="inbox_chat">
-                    <div id="00000000-0000-0000-0000-000000000002" class="chat_list active_chat">
-                        <div class="chat_people">
-                            <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                            <div class="chat_ib">
-                                <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
-                                <p>
-                                    Test, which is a new approach to have all solutions
-                                    astrology under one roof  dhf vdhfv dy vdjh vdh vhd vdjv dvd vdv dv dv dvdgv dv dv .
-                                </p>
+                    @for (int i = 0; i < Model.Receivers.Count; i++)
+                    {
+                        var receiver = Model.Receivers[i];
+                        <div id="@receiver.Id" class="chat_list @(i == 0 ? "active_chat" : "")">
+                            <div class="chat_people">
+                                <div class="chat_img"> <img src="@receiver.IconUrl"> </div>
+                                <div class="chat_ib">
+                                    <h5>
+                                        @receiver.Name
+                                    </h5>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="chat_list">
-                        <div class="chat_people">
-                            <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                            <div class="chat_ib">
-                                <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
-                                <p>
-                                    Test, which is a new approach to have all solutions
-                                    astrology under one roof.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
 
             <div class="mesgs">
                 <div class="msg_history">
-                    <div class="incoming_msg">
-                        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                        <div class="received_msg">
-                            <div class="received_withd_msg">
-                                <p>
-                                    Test which is a new approach to have all
-                                    solutions
-                                </p>
-                                <span class="time_date"> 11:01 AM    |    June 9</span>
+                    @foreach (var message in Model.Messages)
+                    {
+                        @if (string.IsNullOrEmpty(@message.Sender))
+                        {
+                            <div class="outgoing_msg">
+                                <div class="sent_msg">
+                                    <p>
+                                        @message.Text
+                                    </p>
+                                    <span class="time_date">@message.Created</span>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="outgoing_msg">
-                        <div class="sent_msg">
-                            <p>
-                                Test which is a new approach to have all
-                                solutions
-                            </p>
-                            <span class="time_date"> 11:01 AM    |    June 9</span>
-                        </div>
-                    </div>
-                    <div class="incoming_msg">
-                        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                        <div class="received_msg">
-                            <div class="received_withd_msg">
-                                <p>Test, which is a new approach to have</p>
-                                <span class="time_date"> 11:01 AM    |    Yesterday</span>
+                        }
+                        else
+                        {
+                            <div class="incoming_msg">
+                                <div class="incoming_msg_img">@message.Sender</div>
+                                <div class="received_msg">
+                                    <div class="received_withd_msg">
+                                        <p>
+                                            @message.Text
+                                        </p>
+                                        <span class="time_date">@message.Created</span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="incoming_msg">
-                        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                        <div class="received_msg">
-                            <div class="received_withd_msg">
-                                <p>Test, which is a new approach to have</p>
-                                <span class="time_date"> 11:01 AM    |    Yesterday</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="incoming_msg">
-                        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                        <div class="received_msg">
-                            <div class="received_withd_msg">
-                                <p>Test, which is a new approach to have</p>
-                                <span class="time_date"> 11:01 AM    |    Yesterday</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="incoming_msg">
-                        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                        <div class="received_msg">
-                            <div class="received_withd_msg">
-                                <p>Test, which is a new approach to have</p>
-                                <span class="time_date"> 11:01 AM    |    Yesterday</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="outgoing_msg">
-                        <div class="sent_msg">
-                            <p>Apollo University, Delhi, India Test</p>
-                            <span class="time_date"> 11:01 AM    |    Today</span>
-                        </div>
-                    </div>
-                    <div class="incoming_msg">
-                        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                        <div class="received_msg">
-                            <div class="received_withd_msg">
-                                <p>
-                                    We work directly with our designers and suppliers,
-                                    and sell direct to you, which means quality, exclusive
-                                    products, at a price anyone can afford.
-                                </p>
-                                <span class="time_date"> 11:01 AM    |    Today</span>
-                            </div>
-                        </div>
-                    </div>
+                        }
+                    }
                 </div>
                 <div class="type_msg">
                     <div class="input_msg_write">
@@ -138,50 +81,51 @@
         </div>
 
     </div>
-
-    <div id="chatroom"></div>
 </div>
 
 
 @section Scripts {
-    <script>
-        $('.msg_history').animate({ scrollTop: $('.msg_history').height() }, 100);
-        $('.msg_history').scroll(scrollHandler);
-    </script>
-
+    <script src="~/js/lazyLoading.js"></script>
     <script src="~/js/signalr.min.js"></script>
 
     <script>
-        let hubUrl = "/chat";
+        $('.msg_history').animate({ scrollTop: $('.msg_history').height() }, 100);
+
+        $('.msg_history').scroll(messageScrollHandler);
+
+        $('.inbox_chat').scroll(receiverScrollHandler);
+
+        $('.chat_list').click(function () {
+            if (!$(this).hasClass('active_chat')) {
+                $('.active_chat').removeClass('active_chat');
+                $(this).addClass('active_chat');
+                $('.msg_history').empty();
+                let receiverId = $('.active_chat').attr('id');
+                loadMessages(receiverId, 0, () => { $('.msg_history').animate({ scrollTop: $('.msg_history')[0].scrollHeight }, 100); });
+            }
+        });
+    </script>
+
+    <script>
         const hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl(hubUrl)
+            .withUrl('/chat')
             .build();
 
-        let userName = "";
-        // получение сообщения от сервера
-        hubConnection.on("Receive", function (userId, message) {
-
-            let userNameElem = document.createElement("b");
-            userNameElem.appendChild(document.createTextNode(userId + ": "));
-
-            let elem = document.createElement("p");
-            elem.appendChild(userNameElem);
-            elem.appendChild(document.createTextNode(message));
-
-            var firstElem = document.getElementById("chatroom").firstChild;
-            document.getElementById("chatroom").insertBefore(elem, firstElem);
-
+        hubConnection.on("Receive", function (message) {
+            let receiverId = $('.active_chat').attr('id');
+            if (receiverId === message.receiverId) {
+                $('.msg_history').append(getMessageHtml(message));
+                if (!message.sender) {
+                    $('.msg_history').animate({ scrollTop: $('.msg_history')[0].scrollHeight }, 100);
+                }
+            }
         });
 
-        // отправка сообщения от простого пользователя
         document.getElementById("sendBtn").addEventListener("click", function (e) {
             let receiverId = $('.active_chat').attr('id');
             let message = $("#message").val();
             hubConnection.invoke("Notify", receiverId, message);
-            debugger;
-            $('.msg_history').append(`<div class="outgoing_msg"><div class="sent_msg"><p>${message}</p><span class="time_date">11: 01 AM</span></div></div>`);
             $('#message').val('').focus();
-            $('.msg_history').animate({ scrollTop: $('.msg_history')[0].scrollHeight }, 100);
         });
 
         hubConnection.start();

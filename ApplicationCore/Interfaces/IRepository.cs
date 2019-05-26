@@ -10,7 +10,7 @@ namespace ApplicationCore.Interfaces
 	public interface IRepository<T> where T : BaseEntity
 	{
 		Task<T> GetByIdAsync(Guid id);
-		Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
+		Task<T> FirstOrDefaultAsync(ISpecification<T> spec);
 		Task<IReadOnlyList<T>> ListAllAsync();
 		Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec);
 		Task<T> AddAsync(T entity);

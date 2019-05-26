@@ -1,38 +1,110 @@
-
-let page = 0,
+let messagePage = 0,
+	allMessageLoaded = false,
+	receiverPage = 1,
+	allReceiverLoaded = false,
 	inCallback = false,
-	_isAllLoaded = false;;
+	messageReceiverId = $('.active_chat').attr('id');
 
-let scrollHandler = function () {
-	if ($('.msg_history').scrollTop() <= 1) {
-		console.log('(msg_history).scrollTop() = ' + $('.msg_history').scrollTop());
-		loadProjectData("Home/GetUsers");
+function messageScrollHandler() {
+	if (!allMessageLoaded && $('.msg_history').scrollTop() === 0 && !inCallback) {
+		inCallback = true;
+		let receiverId = $('.active_chat').attr('id');
+		loadMessages(receiverId, ++messagePage, () => { $('.msg_history').animate({ scrollTop: 2 }, 100); });
 	}
 }
 
-function loadProjectData(loadMoreRowsUrl) {
-	if (page > -1 && !inCallback) {
-		inCallback = true;
-		page++;
-
-		$.ajax({
-			type: 'GET',
-			url: loadMoreRowsUrl,
-			data: "page=" + page,
-			success: function (data, textstatus) {
-				if (data != '') {
-					$('.msg_history').prepend('<div class="outgoing_msg"><div class="sent_msg"><p>Apollo University, Delhi, India Test</p><span class="time_date">11: 01 AM</span></div></div>');
-				}
-				else {
-					page = -1;
-				}
-
-				inCallback = false;
-				$('.msg_history').animate({ scrollTop: 2 }, 100);
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				alert(errorThrown);
-			}
-		});
+function loadMessages(receiverId, page, successCallback) {
+	if (messageReceiverId !== receiverId) {
+		messageReceiverId = receiverId;
+		allMessageLoaded = false;
 	}
+	messagePage = page;
+	console.log(`receiverId=${receiverId}&page=${page}`);
+	$.ajax({
+		type: 'GET',
+		url: 'api/Message/Get',
+		data: `receiverId=${receiverId}&page=${page}`,
+		success: function (data, textstatus) {
+			if (data.length === 0) {
+				allMessageLoaded = true;
+			}
+			for (var i = 0; i < data.length; i++) {
+				$('.msg_history').prepend(getMessageHtml(data[i]));
+			}
+
+			inCallback = false;
+
+			if (successCallback) {
+				successCallback();
+			}
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown) {
+			alert(errorThrown);
+		}
+	});
+}
+
+function getMessageHtml(message) {
+	if (message.sender) {
+		return `<div class="incoming_msg">
+					<div class="incoming_msg_img">${message.sender}</div>
+					<div class="received_msg">
+						<div class="received_withd_msg">
+							<p>
+								${message.text}
+							</p>
+							<span class="time_date">${message.created}</span>
+						</div>
+					</div>
+				</div>`;
+	}
+	else {
+		return `<div class="outgoing_msg">
+					<div class="sent_msg">
+						<p>
+							${message.text}
+						</p>
+						<span class="time_date">${message.created}</span>
+					</div>
+				</div>`;
+	}
+}
+
+function receiverScrollHandler() {
+	if (!allReceiverLoaded && $(this).scrollTop() + $(this).innerHeight() + 10 >= $(this)[0].scrollHeight) {
+		loadReceivers(receiverPage++);
+	}
+}
+
+function loadReceivers(page) {
+	console.log(`loadReceivers page=${page}`);
+	$.ajax({
+		type: 'GET',
+		url: 'api/Receiver/Get',
+		data: `page=${page}`,
+		success: function (data, textstatus) {
+			if (data.length === 0) {
+				allReceiverLoaded = true;
+			}
+			for (var i = 0; i < data.length; i++) {
+				$('.inbox_chat').append(getReceiverHtml(data[i]));
+			}
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown) {
+			alert(errorThrown);
+		}
+	});
+}
+
+function getReceiverHtml(receiver) {
+	return `<div id="${receiver.id}" class="chat_list">
+				<div class="chat_people">
+					<div class="chat_img"> <img src="${receiver.iconUrl}"> </div>
+						<div class="chat_ib">
+						<h5>
+							${receiver.name}
+						</h5>
+					</div>
+				</div>
+			</div>`;
 }

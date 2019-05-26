@@ -56,8 +56,11 @@ namespace Web
 			services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 			services.AddScoped<IUserRepository, UserRepository>();
 			services.AddScoped<UserService>();
-			services.AddScoped<AuthService>();
+			services.AddSingleton<AuthService>();
 			services.AddScoped<MessageService>();
+			services.AddScoped<MessageViewModelService>();
+			services.AddScoped<ReceiverViewModelService>();
+			services.AddScoped<ChatViewModelService>();
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

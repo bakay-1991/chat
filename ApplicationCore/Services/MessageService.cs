@@ -1,9 +1,8 @@
 ﻿using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
+using ApplicationCore.Specifications;
 using Ardalis.GuardClauses;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ApplicationCore.Services
@@ -23,24 +22,23 @@ namespace ApplicationCore.Services
 			_groupRepository = groupRepository;
 		}
 
-		public async Task CreateMessageAsync(Guid userId, Guid receiverId, string text)
+		public async Task<Message> CreateMessageAsync(Guid userId, string text, Guid? ToUserId, Guid? ToGroupId)
 		{
 			Guard.Against.NullOrEmpty(text, nameof(text));
-
-			Message message = new Message() { Created = DateTime.UtcNow, FromUserId = userId, Text = text };
-
-			User user = await _userRepository.GetByIdAsync(receiverId);
-			if (user != null)
+			if (ToUserId == null && ToGroupId == null)
 			{
-				message.ToUserId = user.Id;
+				throw new Exception("Missed receiver.");
 			}
-			else
-			{
-				Group group = await _groupRepository.GetByIdAsync(receiverId);
-				message.ToGroupId = group?.Id;
-			}
+
+			Message message = new Message() { Created = DateTime.UtcNow, FromUserId = userId, Text = text, ToUserId = ToUserId, ToGroupId = ToGroupId };
 
 			await _messageRepository.AddAsync(message);
+
+			BaseSpecification<Message> messageSpec = new BaseSpecification<Message>();
+			messageSpec.AddCriteria(x => x.Id == message.Id);
+			messageSpec.AddInclude(x => x.FromUser);
+
+			return await _messageRepository.FirstOrDefaultAsync(messageSpec);
 		}
 	}
 }
