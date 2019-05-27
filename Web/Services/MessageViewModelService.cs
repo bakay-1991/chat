@@ -47,7 +47,7 @@ namespace Web.Services
 			return messagesOnPage.Select(x => ConvertTo(x, senderId, receiverId)).ToList();
 		}
 
-		public static MessageViewModel ConvertTo(Message message, Guid senderId, Guid receiverId)
+		public static MessageViewModel ConvertTo(Message message, Guid? senderId, Guid receiverId)
 		{
 			return new MessageViewModel()
 			{

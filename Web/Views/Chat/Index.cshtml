@@ -11,15 +11,7 @@
             <div class="inbox_people">
                 <div class="headind_srch">
                     <div class="recent_heading">
-                        <h4>Recent</h4>
-                    </div>
-                    <div class="srch_bar">
-                        <div class="stylish-input-group">
-                            <input type="text" class="search-bar" placeholder="Search">
-                            <span class="input-group-search">
-                                <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
-                            </span>
-                        </div>
+                        <h4>Groups and people</h4>
                     </div>
                 </div>
                 <div class="inbox_chat">
@@ -121,12 +113,24 @@
             }
         });
 
-        document.getElementById("sendBtn").addEventListener("click", function (e) {
-            let receiverId = $('.active_chat').attr('id');
-            let message = $("#message").val();
-            hubConnection.invoke("Notify", receiverId, message);
-            $('#message').val('').focus();
+        $('#sendBtn').on('click', function (event) {
+            sendMessage();
         });
+
+        $('#message').keyup(function (event) {
+            if (event.keyCode == 13) {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            let message = $("#message").val();
+            if (message) {
+                let receiverId = $('.active_chat').attr('id');
+                hubConnection.invoke("Notify", receiverId, message);
+            }
+            $('#message').val('').focus();
+        }
 
         hubConnection.start();
     </script>

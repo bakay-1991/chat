@@ -6,7 +6,7 @@ let messagePage = 0,
 	messageReceiverId = $('.active_chat').attr('id');
 
 function messageScrollHandler() {
-	if (!allMessageLoaded && $('.msg_history').scrollTop() === 0 && !inCallback) {
+	if (!allMessageLoaded && $(this).scrollTop() === 0 && !inCallback) {
 		inCallback = true;
 		let receiverId = $('.active_chat').attr('id');
 		loadMessages(receiverId, ++messagePage, () => { $('.msg_history').animate({ scrollTop: 2 }, 100); });
@@ -14,12 +14,12 @@ function messageScrollHandler() {
 }
 
 function loadMessages(receiverId, page, successCallback) {
+	inCallback = true;
 	if (messageReceiverId !== receiverId) {
 		messageReceiverId = receiverId;
 		allMessageLoaded = false;
 	}
 	messagePage = page;
-	console.log(`receiverId=${receiverId}&page=${page}`);
 	$.ajax({
 		type: 'GET',
 		url: 'api/Message/Get',
@@ -77,7 +77,6 @@ function receiverScrollHandler() {
 }
 
 function loadReceivers(page) {
-	console.log(`loadReceivers page=${page}`);
 	$.ajax({
 		type: 'GET',
 		url: 'api/Receiver/Get',

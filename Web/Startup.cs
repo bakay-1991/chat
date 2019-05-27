@@ -58,9 +58,11 @@ namespace Web
 			services.AddScoped<UserService>();
 			services.AddSingleton<AuthService>();
 			services.AddScoped<MessageService>();
+			services.AddScoped<GroupService>();
 			services.AddScoped<MessageViewModelService>();
 			services.AddScoped<ReceiverViewModelService>();
 			services.AddScoped<ChatViewModelService>();
+			services.AddScoped<UserViewModelService>();
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

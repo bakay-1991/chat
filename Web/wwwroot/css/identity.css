@@ -1,0 +1,35 @@
+﻿.esh-identity {
+    line-height: 2rem;
+    position: relative;
+    text-align: right;
+}
+
+.esh-identity-section {
+    display: inline-block;
+    width: 100%;
+}
+
+.esh-identity-name {
+    display: inline-block;
+}
+
+.esh-identity-image {
+    display: inline-block;
+}
+
+.esh-identity-drop {
+    height: 10px;
+    width: 8rem;
+    overflow: hidden;
+    padding: .5rem;
+    position: absolute;
+    right: 0;
+    transition: height 0.35s;
+}
+
+.esh-identity:hover .esh-identity-drop {
+    background: #FFFFFF;
+    border: 1px solid #EEEEEE;
+    height: 4rem;
+    transition: height 0.35s;
+}

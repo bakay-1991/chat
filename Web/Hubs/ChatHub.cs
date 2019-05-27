@@ -2,15 +2,16 @@
 using ApplicationCore.Interfaces;
 using ApplicationCore.Services;
 using ApplicationCore.Specifications;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web.Services;
-using Web.ViewModels;
 
 namespace Web.Hubs
 {
+	[Authorize]
 	public class ChatHub : Hub
 	{
 		private readonly MessageService _messageService;
@@ -34,7 +35,9 @@ namespace Web.Hubs
 				if (group != null)
 				{
 					Message msg = await _messageService.CreateMessageAsync(userId, message, null, group.Id);
-					await Clients.Group(group.Id.ToString()).SendAsync("Receive", MessageViewModelService.ConvertTo(msg, userId, receiverId));
+					//todo: need to save ConnectionId in DB
+					await Clients.Client(Context.ConnectionId).SendAsync("Receive", MessageViewModelService.ConvertTo(msg, userId, receiverId));
+					await Clients.GroupExcept(group.Id.ToString(), Context.ConnectionId).SendAsync("Receive", MessageViewModelService.ConvertTo(msg, null, receiverId));
 				}
 				else
 				{

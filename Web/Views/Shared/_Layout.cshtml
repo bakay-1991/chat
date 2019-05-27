@@ -17,6 +17,8 @@
     </environment>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/chat.css" />
+    <link rel="stylesheet" href="~/css/identity.css" />
 </head>
 <body>
     <header>
@@ -30,13 +32,25 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Chat" asp-action="Index">Chat</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Chat" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Group" asp-action="Index">Groups</a>
                         </li>
                     </ul>
                 </div>
+                @if (Context.User.Identity.IsAuthenticated)
+                {
+                    @*<div>@Context.User.Identity.Name</div>*@
+                    <section class="col-lg-4 col-md-5 col-xs-12">
+                        <div class="esh-identity">
+                            <section class="esh-identity-section">
+                                <div class="esh-identity-name">@Context.User.Identity.Name</div>
+                                <img class="esh-identity-image" src="~/images/arrow-down.png">
+                            </section>
+                            <section class="esh-identity-drop">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Log Out</a>
+                            </section>
+                        </div>
+                    </section>
+                }
             </div>
         </nav>
     </header>
@@ -49,7 +63,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - Chat - <a asp-area="" asp-controller="Chat" asp-action="Privacy">Privacy</a>
+            &copy; 2019 - Chat
         </div>
     </footer>
 

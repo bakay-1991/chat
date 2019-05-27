@@ -1,6 +1,8 @@
 ﻿using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -25,6 +27,7 @@ namespace Web.Controllers
 		}
 
 		[HttpGet]
+		[AllowAnonymous]
 		public IActionResult Register()
 		{
 			return View();
@@ -54,12 +57,14 @@ namespace Web.Controllers
 		}
 
 		[HttpGet]
+		[AllowAnonymous]
 		public IActionResult Login()
 		{
 			return View();
 		}
 
 		[HttpPost]
+		[AllowAnonymous]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Login(LoginViewModel model)
 		{
@@ -78,9 +83,11 @@ namespace Web.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult Logout()
+		[Authorize]
+		public async Task<IActionResult> Logout()
 		{
-			return View("Login");
+			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			return RedirectToAction("Login", "Account");
 		}
 	}
 }

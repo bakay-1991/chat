@@ -1,0 +1,26 @@
+﻿@model Web.ViewModels.GroupViewModel
+@{
+    ViewData["Title"] = "Group Page";
+}
+
+<form asp-action="Group" method="post" class="form-horizontal">
+    <div class="form-group">
+        <label asp-for="Name" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">Choose Users</label>
+        <div class="col-md-10">
+            <select asp-for="@Model.UserIds"
+                    asp-items="@ViewBag.Users"
+                    class="chzn-select form-control"></select>
+            <span asp-validation-for="UserIds" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-default" style="margin-left:15px;">Create group</button>
+    </div>
+</form>

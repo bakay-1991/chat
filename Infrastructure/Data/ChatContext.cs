@@ -1,8 +1,6 @@
 ﻿using ApplicationCore.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Data
 {
@@ -12,7 +10,6 @@ namespace Infrastructure.Data
 		public DbSet<Group> Groups { get; set; }
 		public DbSet<GroupUser> GroupUsers { get; set; }
 		public DbSet<Message> Messages { get; set; }
-		public DbSet<MessageLast> MessageLasts { get; set; }
 
 		public ChatContext(DbContextOptions<ChatContext> options)
 			: base(options)
@@ -27,14 +24,6 @@ namespace Infrastructure.Data
 
 			modelBuilder.Entity<GroupUser>()
 						.HasIndex(x => new { x.UserId, x.GroupId })
-						.IsUnique();
-
-			modelBuilder.Entity<MessageLast>()
-						.HasIndex(x => x.UserId)
-						.IsUnique();
-
-			modelBuilder.Entity<MessageLast>()
-						.HasIndex(x => x.GroupId)
 						.IsUnique();
 
 			User user1 = new User { Id = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "user1", Email = "user1@gmail.com", Password = "123456" };

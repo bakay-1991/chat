@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Web.Models;
+using System;
+using System.Threading.Tasks;
 using Web.Services;
 
 namespace Web.Controllers
@@ -28,11 +23,6 @@ namespace Web.Controllers
 		{
 			Guid userId = _authService.GetUserId(User);
 			return View(await _chatViewModelService.GetChatViewModel(userId, 0));
-		}
-
-		public IActionResult Privacy()
-		{
-			return View();
 		}
 	}
 }
